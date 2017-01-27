@@ -1,0 +1,9 @@
+{application, 'tcp_shnur', [
+        {description, ""},
+        {vsn, "rolling"},
+        {modules, ['echo_protocol','tcp_shnur_app','tcp_shnur_sup','toppage_handler','db']},
+        {registered, [tcp_shnur_sup]},
+        {applications, [kernel,stdlib,cowboy,mnesia,runtime_tools,wx,observer]},
+        {mod, {tcp_shnur_app, []}},
+        {env, []}
+]}.
