@@ -11,19 +11,15 @@ init(Req0, Opts) ->
 maybe_echo(<<"POST">>, true, Req0) ->
 	{ok, PostVals, Req} = cowboy_req:read_urlencoded_body(Req0),
 	Echo = proplists:get_value(<<"id">>, PostVals),
-	echo(Echo, Req);
+	db:get(list_to_atom(binary_to_list(Echo))) ! test,
+	echo(Req);
 maybe_echo(<<"POST">>, false, Req) ->
 	cowboy_req:reply(400, [], <<"Missing body.">>, Req);
 maybe_echo(_, _, Req) ->
 	%% Method not allowed.
 	cowboy_req:reply(405, Req).
 
-echo(undefined, Req) ->
-	cowboy_req:reply(400, [], <<"Missing echo parameter.">>, Req);
-echo(Echo, Req) ->
-	% Pid = db:get(binary_to_list(Echo)),
-	% io:format(atom_to_list(Echo)),
-	% db:get(atom_to_list(Echo)) ! test,
+echo(Req) ->
 	cowboy_req:reply(200, #{
-		<<"content-type">> => <<"text/plain; charset=utf-8">>
-	}, Echo, Req).
+		<<"content-type">> => <<"only status">>
+	},  Req).

@@ -1,7 +1,8 @@
 -module(db).
 -export([insert/2,get/1, search/1, init/0]).
-
 -record(data, {key, value}).
+
+-export([retrieve/1]).
 
 init() ->
 mnesia:start(),
@@ -23,7 +24,8 @@ retrieve(Key) ->
     Data.
 
 get(Key) ->
-  Result = lists:nth(1, retrieve(Key)),
+  Akey=atom_to_list(Key),
+  Result = lists:nth(1, retrieve(Akey)),
   Result#data.value.
 
 search(Val) ->

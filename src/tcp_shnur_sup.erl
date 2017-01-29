@@ -1,22 +1,11 @@
-%% Feel free to use, reuse and abuse the code in this file.
-
 %% @private
 -module(tcp_shnur_sup).
 -behaviour(supervisor).
-
-%% API.
--export([start_link/0]).
-
-%% supervisor.
--export([init/1]).
-
-%% API.
-
+-export([start_link/0,init/1]).
 -spec start_link() -> {ok, pid()}.
+
 start_link() ->
 	supervisor:start_link({local, ?MODULE}, ?MODULE, []).
-
-%% supervisor.
 
 init([]) ->
 	Procs = [],
