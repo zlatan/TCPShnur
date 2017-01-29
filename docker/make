@@ -1,0 +1,23 @@
+#!/bin/bash
+
+cd ../ && make
+cp -r _rel/ docker/
+cd docker/
+
+project=$(ls _rel/)
+rm _rel/${project}/tcp_shnur*.tar.gz
+cp /bin/sh _rel/${project}/erts-*/bin/
+mkdir -p _rel/${project}/lib64
+cp /lib64/ld-linux*.so.* _rel/${project}/lib64
+cp /lib64/ld-linux*.so.* ${RELEASE}/lib64
+
+dependancy=$(ldd _rel/*/erts-*/bin/* _rel/*/lib/*/priv/lib/* | grep "=>" | cut -d '>' -f 2 | grep -o '/lib/.*' | awk '{print $1}' | sort | uniq)
+
+mkdir -p _rel/${project}$(dirname $dependancy | sort | uniq)
+
+for libs in $dependancy;
+do
+   cp -L $libs _rel/${project}${libs}
+done
+
+docker build -t kili/tcpshnur .
